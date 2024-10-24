@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Platform Landing Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-black text-white p-4">
+            <nav class="container mx-auto flex justify-between items-center">
+                <div class="text-2xl font-bold">YourLogo</div>
+                <div class="space-x-4">
+                    <a href="#" class="hover:underline">Product</a>
+                    <a href="#" class="hover:underline">About</a>
+                    <a href="#" class="hover:underline">Pricing</a>
+                    <a onclick="location.href='login.html';" class="bg-white text-black px-4 py-2 rounded-full hover:bg-gray-200 transition-colors cursor">Login</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="flex-grow">
+            <section class="hero min-h-screen flex items-center justify-center bg-gray-50">
+                <div class="text-center">
+                    <h1 class="text-6xl font-bold mb-6">Welcome to Our Platform</h1>
+                    <p class="text-xl mb-8">Discover how we can help you achieve your goals.</p>
+                    <div class="space-x-4">
+                        <button id="getStartedBtn" class="cursorr bg-black text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-800 transition-colors">
+                            Get Started
+                        </button>
+                        <a onclick="location.href='signup.html';" class="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold border border-black hover:bg-gray-100 transition-colors cursor">
+                            Sign Up
+                        </a>
+                    </div>
+                    <div id="scrollIndicator" class="mt-12 animate-bounce">
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                </div>
+            </section>
+
+            <section id="educationSection" class="py-20 bg-white">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-4xl font-bold mb-8 text-center">Learn About Our Platform</h2>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold mb-4">Feature 1</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold mb-4">Feature 2</h3>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold mb-4">Feature 3</h3>
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-black text-white py-6">
+            <div class="container mx-auto text-center">
+                <p>&copy; 2024 Your Company. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

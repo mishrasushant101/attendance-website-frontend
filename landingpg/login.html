@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="min-h-screen flex flex-col bg-gray-50">
+        <header class="bg-black text-white p-4">
+            <nav class="container mx-auto flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">YourLogo</a>
+                <div class="space-x-4">
+                    <button onclick="location.href='signup.html';" class="hover:underline signupp">Sign Up</button>
+                </div>
+            </nav>
+        </header>
+        <main class="flex-grow flex items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <h1 class="text-3xl font-bold mb-6 text-center">Login</h1>
+                <form id="loginForm" class="space-y-4">
+                    <div class="space-y-2">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="w-full">Login</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p>Don't have an account? <a onclick="location.href='signup.html';" class="text-blue-600 hover:underline">Sign Up</a></p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html>
