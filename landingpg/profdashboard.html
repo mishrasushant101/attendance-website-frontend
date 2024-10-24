@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Dashboard</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background-color: #f0f0f0;
+        }
+        .dashboard {
+            display: flex;
+            height: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 20px;
+        }
+        .sidebar h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            padding: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .sidebar li:hover {
+            background-color: #333333;
+        }
+        .sidebar li.active {
+            background-color: #333333;
+            color: #fff;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ffffff;
+            overflow-y: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logout-btn {
+            background-color: #f05545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #d64c3b;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            flex: 1;
+            text-align: center;
+        }
+        .stat-card .card-title {
+            font-size: 16px;
+        }
+        .stat-card div {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        select, input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .hidden {
+            display: none;
+        }
+        .edit-btn, .save-btn, .cancel-btn {
+            background-color: #f2f2f2;
+            color: #000000;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        .edit-btn:hover, .save-btn:hover, .cancel-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .timer-input {
+            width: 60px;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        #add-lecture-btn {
+            margin-top: 10px;
+            background-color: #f2f2f2;
+            color: #000000;
+        }
+        #add-lecture-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .editable-cell {
+            padding: 0;
+        }
+        .editable-cell input {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1>Attendance MS</h1>
+            <ul>
+                <li class="active" data-tab="overview">Overview</li>
+                <li data-tab="attendance">Attendance</li>
+                <li data-tab="percentage">Attendance %</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <header class="header">
+                <h1>Professor Dashboard</h1>
+                <button class="logout-btn">Logout</button>
+            </header>
+            <div id="overview-tab">
+                <div class="stats-container">
+                    <div class="card stat-card">
+                        <div class="card-title">Registered Students</div>
+                        <div id="student-count">0</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="card-title">Total Lectures</div>
+                        <div id="lecture-count">0</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Lectures</div>
+                    <table id="lectures-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Subject Code</th>
+                                <th>Date</th>
+                                <th>Timer (minutes)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <button id="add-lecture-btn" class="edit-btn">Add Lecture</button>
+                </div>
+            </div>
+            <div id="attendance-tab" class="hidden">
+                <div class="card">
+                    <div class="card-title">View Attendance</div>
+                    <select id="subject-select-attendance">
+                        <option value="">Select a subject</option>
+                    </select>
+                    <input type="date" id="date-select-attendance" class="hidden">
+                    <table id="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="percentage-tab" class="hidden">
+                <div class="card">
+                    <div class="card-title">Attendance Percentage</div>
+                    <select id="subject-select-percentage">
+                        <option value="">Select a subject</option>
+                    </select>
+                    <table id="percentage-table">
+                        <thead>
+                            <tr>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Attendance %</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const subjects = [
+            { code: "MATH101", name: "Mathematics" },
+            { code: "PHYS101", name: "Physics" },
+            { code: "CS101", name: "Computer Science" },
+            { code: "ENG101", name: "English" },
+        ];
+
+        let lectures = [
+            { name: "Introduction to Calculus", code: "MATH101", date: "2024-10-25", timer: 60 },
+            { name: "Newton's Laws", code: "PHYS101", date: "2024-10-26", timer: 45 },
+            { name: "Data Structures", code: "CS101", date: "2024-10-27", timer: 90 },
+            { name: "Essay Writing", code: "ENG101", date: "2024-10-28", timer: 60 },
+        ];
+
+        const students = [
+            { name: "Alice Johnson", id: "S001" },
+            { name: "Bob Smith", id: "S002" },
+            { name: "Charlie Brown", id: "S003" },
+            { name: "Diana Ross", id: "S004" },
+        ];
+
+        const attendanceData = {
+            MATH101: {
+                "2024-10-25": { S001: true, S002: true, S003: false, S004: true },
+                "2024-10-26": { S001: true, S002: false, S003: true, S004: true }
+            },
+            PHYS101: {
+                "2024-10-25": { S001: true, S002: true, S003: true, S004: false },
+                "2024-10-26": { S001: false, S002: true, S003: true, S004: true }
+            },
+            CS101: {
+                "2024-10-25": { S001: false, S002: true, S003: true, S004: true },
+                "2024-10-26": { S001: true, S002: true, S003: false, S004: true }
+            },
+            ENG101: {
+                "2024-10-25": { S001: true, S002: false, S003: true, S004: true },
+                "2024-10-26": { S001: true, S002: true, S003: true, S004: false }
+            }
+        };
+
+        function initializeDashboard() {
+            document.getElementById('student-count').textContent = students.length;
+            document.getElementById('lecture-count').textContent = lectures.length;
+
+            updateLecturesTable();
+
+            const subjectSelectAttendance = document.getElementById('subject-select-attendance');
+            const subjectSelectPercentage = document.getElementById('subject-select-percentage');
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.code;
+                option.textContent = `${subject.name} (${subject.code})`;
+                subjectSelectAttendance.appendChild(option.cloneNode(true));
+                subjectSelectPercentage.appendChild(option);
+            });
+
+            subjectSelectAttendance.addEventListener('change', handleSubjectChange);
+            document.getElementById('date-select-attendance').addEventListener('change', updateAttendanceTable);
+            subjectSelectPercentage.addEventListener('change', updatePercentageTable);
+
+            document.querySelectorAll('.sidebar li').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.sidebar li').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    const tabName = item.getAttribute('data-tab');
+                    showTab(tabName);
+                });
+            });
+
+            document.getElementById('add-lecture-btn').addEventListener('click', addLecture);
+        }
+
+        function updateLecturesTable() {
+            const lecturesTable = document.getElementById('lectures-table').getElementsByTagName('tbody')[0];
+            lecturesTable.innerHTML = '';
+            lectures.forEach((lecture, index) => {
+                const row = lecturesTable.insertRow();
+                row.innerHTML = `
+                    <td class="editable-cell"><input type="text" value="${lecture.name}" readonly></td>
+                    <td class="editable-cell"><input type="text" value="${lecture.code}" readonly></td>
+                    <td class="editable-cell"><input type="date" value="${lecture.date}" readonly></td>
+                    <td class="editable-cell"><input type="number" value="${lecture.timer}" class="timer-input" readonly></td>
+                    <td>
+                        <button class="edit-btn">Edit</button>
+                        <button class="save-btn hidden">Save</button>
+                        <button class="cancel-btn hidden">Cancel</button>
+                    </td>
+                `;
+                const editBtn = row.querySelector('.edit-btn');
+                const saveBtn = row.querySelector('.save-btn');
+                const cancelBtn = row.querySelector('.cancel-btn');
+                const inputs = row.querySelectorAll('input');
+
+                editBtn.addEventListener('click', () => {
+                    inputs.forEach(input => input.removeAttribute('readonly'));
+                    editBtn.classList.add('hidden');
+                    saveBtn.classList.remove('hidden');
+                    cancelBtn.classList.remove('hidden');
+                });
+
+                saveBtn.addEventListener('click', () => {
+                    lectures[index] = {
+                        name: inputs[0].value,
+                        code: inputs[1].value,
+                        date: inputs[2].value,
+                        timer: parseInt(inputs[3].value)
+                    };
+                    inputs.forEach(input => input.setAttribute('readonly', true));
+                    editBtn.classList.remove('hidden');
+                    saveBtn.classList.add('hidden');
+                    cancelBtn.classList.add('hidden');
+                });
+
+                cancelBtn.addEventListener('click', () => {
+                    inputs[0].value = lecture.name;
+                    inputs[1].value = lecture.code;
+                    inputs[2].value = lecture.date;
+                    inputs[3].value = lecture.timer;
+                    inputs.forEach(input => input.setAttribute('readonly', true));
+                    editBtn.classList.remove('hidden');
+                    saveBtn.classList.add('hidden');
+                    cancelBtn.classList.add('hidden');
+                });
+            });
+        }
+
+        function addLecture() {
+            const newLecture = {
+                name: "New Lecture",
+                code: "SUBJ101",
+                date: new Date().toISOString().split('T')[0],
+                timer: 60
+            };
+            lectures.push(newLecture);
+            updateLecturesTable();
+            document.getElementById('lecture-count').textContent = lectures.length;
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.main-content > div').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+        }
+
+        function handleSubjectChange() {
+            const selectedSubject = document.getElementById('subject-select-attendance').value;
+            const dateSelect = document.getElementById('date-select-attendance');
+            dateSelect.innerHTML = '<option value="">Select a date</option>';
+            if (selectedSubject) {
+                dateSelect.classList.remove('hidden');
+                const dates = Object.keys(attendanceData[selectedSubject]);
+                dates.forEach(date => {
+                    const option = document.createElement('option');
+                    option.value = date;
+                    option.textContent = date;
+                    
+                    dateSelect.appendChild(option);
+                });
+            } else {
+                dateSelect.classList.add('hidden');
+            }
+            updateAttendanceTable();
+        }
+
+        function updateAttendanceTable() {
+            const selectedSubject = document.getElementById('subject-select-attendance').value;
+            const selectedDate = document.getElementById('date-select-attendance').value;
+            const attendanceTable = document.getElementById('attendance-table').getElementsByTagName('tbody')[0];
+            attendanceTable.innerHTML = '';
+            if (selectedSubject && selectedDate) {
+                students.forEach(student => {
+                    const row = attendanceTable.insertRow();
+                    row.insertCell(0).textContent = student.id;
+                    row.insertCell(1).textContent = student.name;
+                    const attendanceCell = row.insertCell(2);
+                    const isPresent = attendanceData[selectedSubject][selectedDate][student.id];
+                    attendanceCell.textContent = isPresent ? 'Present' : 'Absent';
+                    attendanceCell.style.color = isPresent ? 'green' : 'red';
+                });
+            }
+        }
+
+        function updatePercentageTable() {
+            const selectedSubject = document.getElementById('subject-select-percentage').value;
+            const percentageTable = document.getElementById('percentage-table').getElementsByTagName('tbody')[0];
+            percentageTable.innerHTML = '';
+            if (selectedSubject) {
+                students.forEach(student => {
+                    const row = percentageTable.insertRow();
+                    row.insertCell(0).textContent = student.id;
+                    row.insertCell(1).textContent = student.name;
+                    const percentageCell = row.insertCell(2);
+                    const dates = Object.keys(attendanceData[selectedSubject]);
+                    const totalClasses = dates.length;
+                    const attendedClasses = dates.filter(date => attendanceData[selectedSubject][date][student.id]).length;
+                    const percentage = (attendedClasses / totalClasses) * 100;
+                    percentageCell.textContent = `${percentage.toFixed(2)}%`;
+                    percentageCell.style.color = percentage >= 75 ? 'green' : 'red';
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    </script>
+</body>
+</html>
